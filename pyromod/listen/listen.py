@@ -25,6 +25,7 @@ from typing import Optional, List
 import pyrogram
 
 from pagermaid.single_utils import get_sudo_list, Message
+from pagermaid.scheduler import add_delete_message_job
 
 from ..utils import patch, patchable
 
@@ -184,6 +185,10 @@ class Message(pyrogram.types.Message):
         if not user and self.chat.type == pyrogram.enums.ChatType.PRIVATE:  # Current chat
             user = self.chat.id
         return user
+
+    @patchable
+    async def delay_delete(self, delay: int = 60):
+        add_delete_message_job(self, delay)
 
     @patchable
     async def edit_text(

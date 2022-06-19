@@ -37,5 +37,8 @@ class Message(Message):  # noqa
         """ Obtains a user from either the reply message or command arguments. """
         return
 
+    async def delay_delete(self, delete_seconds: int = 60) -> Optional[bool]:
+        return
+
     async def safe_delete(self, revoke: bool = True) -> None:
         return
