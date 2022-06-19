@@ -263,7 +263,7 @@ async def plugin(__: Client, message: Message):
                         un_need_update += "\n`" + key + "`:Ver  " + value
                     else:
                         need_update_list.extend([key])
-                        need_update += "\n`" + key + "`:Ver  " + value + " --> Ver  " + i['version']
+                        need_update += "\n<code>" + key + "</code>:Ver  " + value + " > Ver  " + i['version']
                     continue
         if un_need_update == f"{lang('apt_no_update')}:":
             un_need_update = ""
