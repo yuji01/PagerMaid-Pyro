@@ -1,3 +1,4 @@
+import contextlib
 import subprocess
 from importlib.util import find_spec
 from os.path import exists
@@ -185,11 +186,10 @@ async def process_exit(start: int, _client, message=None):
     if start and data and cid and mid:
         msg: Message = await _client.get_messages(cid, mid)
         if msg:
-            try:
-                await msg.edit((msg.text if msg.from_user.is_self and msg.text else "") +
-                               f'\n\n> {lang("restart_complete")}')
-            except Exception as e:  # noqa
-                pass
+            with contextlib.suppress(Exception):
+                await msg.edit(
+                    ((msg.text or msg.caption) if msg.from_user.is_self and (msg.text or msg.caption) else "") +
+                    f'\n\n> {lang("restart_complete")}')
         del sqlite["exit_msg"]
     if message:
         sqlite["exit_msg"] = {"cid": message.chat.id, "mid": message.id}
