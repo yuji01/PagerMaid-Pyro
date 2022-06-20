@@ -1,5 +1,5 @@
 """ Pagermaid message plugin. """
-from pyrogram import Client
+
 from pyrogram.errors import Forbidden, FloodWait
 
 from pagermaid import log
@@ -10,7 +10,7 @@ from pagermaid.utils import lang, Message
 
 @listener(is_plugin=False, outgoing=True, command="id",
           description=lang("id_des"))
-async def userid(_: Client, message: Message):
+async def userid(message: Message):
     """ Query the UserID of the sender of the message you replied to. """
     reply = message.reply_to_message
     text = f"Message ID: `{str(message.id)}" + "`\n\n"
@@ -83,7 +83,7 @@ async def userid(_: Client, message: Message):
 @listener(is_plugin=False, outgoing=True, command="uslog",
           description=lang('uslog_des'),
           parameters="<string>")
-async def uslog(_: Client, message: Message):
+async def uslog(message: Message):
     """ Forwards a message into log group """
     if Config.LOG:
         if message.reply_to_message:
@@ -101,7 +101,7 @@ async def uslog(_: Client, message: Message):
 @listener(is_plugin=False, outgoing=True, command="log",
           description=lang('log_des'),
           parameters="<string>")
-async def logging(_: Client, message: Message):
+async def logging(message: Message):
     """ Forwards a message into log group """
     if Config.LOG:
         if message.reply_to_message:
@@ -119,7 +119,7 @@ async def logging(_: Client, message: Message):
 @listener(is_plugin=False, outgoing=True, command="re",
           description=lang('re_des'),
           parameters=lang('re_parameters'))
-async def re(_: Client, message: Message):
+async def re(message: Message):
     """ Forwards a message into this group """
     if reply := message.reply_to_message:
         if message.arguments == '':
@@ -129,7 +129,7 @@ async def re(_: Client, message: Message):
                 num = int(message.arguments)
                 if num > 100:
                     await message.edit(lang('re_too_big'))
-            except:  # noqa
+            except Exception:
                 return await message.edit(lang('re_arg_error'))
         await message.safe_delete()
         for _ in range(num):

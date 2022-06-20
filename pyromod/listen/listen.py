@@ -143,6 +143,7 @@ class User(pyrogram.types.User):
     def cancel_listener(self):
         return self._client.cancel_listener(self.id)
 
+
 # pagermaid-pyro
 
 
@@ -265,3 +266,19 @@ class Message(pyrogram.types.Message):
         return msg
 
     edit = edit_text
+
+
+@patch(pyrogram.dispatcher.Dispatcher)  # noqa
+class Dispatcher(pyrogram.dispatcher.Dispatcher):  # noqa
+    @patchable
+    def remove_all_handlers(self):
+        async def fn():
+            for lock in self.locks_list:
+                await lock.acquire()
+
+            self.groups.clear()
+
+            for lock in self.locks_list:
+                lock.release()
+
+        self.loop.create_task(fn())

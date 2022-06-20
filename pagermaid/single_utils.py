@@ -1,6 +1,11 @@
+import contextlib
 from os import sep, remove, mkdir
 from os.path import exists
 from typing import List, Optional
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from httpx import AsyncClient
+
+from pyrogram import Client
 from pyrogram.types import Message
 from sqlitedict import SqliteDict
 
@@ -19,15 +24,19 @@ def _status_sudo():
 
 
 def safe_remove(name: str) -> None:
-    try:
+    with contextlib.suppress(FileNotFoundError):
         remove(name)
-    except FileNotFoundError:
-        pass
+
+
+class Client(Client):  # noqa
+    job: Optional[AsyncIOScheduler] = None
 
 
 class Message(Message):  # noqa
     arguments: str
     parameter: List
+    bot: Client
+    request: Optional[AsyncClient] = None
 
     def obtain_message(self) -> Optional[str]:
         """ Obtains a message from either the reply message or command arguments. """

@@ -1,19 +1,20 @@
 """ The help module. """
-from pyrogram import Client
 
 from json import dump as json_dump
 from os import listdir, sep
 from pagermaid import help_messages, Config
 from pagermaid.group_manager import enforce_permission
+from pagermaid.modules.reload import reload_all
 from pagermaid.utils import lang, Message, from_self, from_msg_get_sudo_uid
 from pagermaid.listener import listener
-import sys
+
+import pathlib
 
 
 @listener(is_plugin=False, command="help",
           description=lang('help_des'),
           parameters=f"<{lang('command')}>")
-async def help_command(_: Client, message: Message):
+async def help_command(message: Message):
     """ The help new command,"""
     if message.arguments:
         if message.arguments in help_messages:
@@ -63,7 +64,7 @@ async def help_command(_: Client, message: Message):
 @listener(is_plugin=False, command="help_raw",
           description=lang('help_des'),
           parameters=f"<{lang('command')}>")
-async def help_raw_command(_: Client, message: Message):
+async def help_raw_command(message: Message):
     """ The help raw command,"""
     if message.arguments:
         if message.arguments in help_messages:
@@ -89,21 +90,20 @@ async def help_raw_command(_: Client, message: Message):
 @listener(is_plugin=False, command="lang",
           need_admin=True,
           description=lang('lang_des'))
-async def lang_change(_: Client, message: Message):
+async def lang_change(message: Message):
     to_lang = message.arguments
     from_lang = Config.LANGUAGE
     dir_, dir__ = listdir('languages/built-in'), []
     for i in dir_:
         if i.find('yml') != -1:
             dir__.append(i[:-4])
-    with open('config.yml') as f:
-        file = f.read()
+    file = pathlib.Path('config.yml').read_text()
     if to_lang in dir__:
         file = file.replace(f'application_language: "{from_lang}"', f'application_language: "{to_lang}"')
         with open('config.yml', 'w') as f:
             f.write(file)
         await message.edit(f"{lang('lang_change_to')} {to_lang}, {lang('lang_reboot')}")
-        sys.exit(1)
+        reload_all()
     else:
         await message.edit(f'{lang("lang_current_lang")} {Config.LANGUAGE}\n\n'
                            f'{lang("lang_all_lang")}{"，".join(dir__)}')
@@ -114,7 +114,7 @@ async def lang_change(_: Client, message: Message):
           need_admin=True,
           description=lang('alias_des'),
           parameters='{list|del|set} <source> <to>')
-async def alias_commands(_: Client, message: Message):
+async def alias_commands(message: Message):
     source_commands = []
     to_commands = []
     texts = []
@@ -141,7 +141,7 @@ async def alias_commands(_: Client, message: Message):
             with open(f"data{sep}alias.json", 'w') as f:
                 json_dump(Config.alias_dict, f)
             await message.edit(lang('alias_success'))
-            sys.exit(1)
+            reload_all()
         except KeyError:
             await message.edit(lang('alias_no_exist'))
             return
@@ -155,4 +155,4 @@ async def alias_commands(_: Client, message: Message):
         with open(f"data{sep}alias.json", 'w') as f:
             json_dump(Config.alias_dict, f)
         await message.edit(lang('alias_success'))
-        sys.exit(1)
+        reload_all()

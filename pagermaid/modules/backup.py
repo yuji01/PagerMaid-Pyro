@@ -4,8 +4,6 @@ import sys
 import tarfile
 from traceback import format_exc
 
-from pyrogram import Client
-
 from pagermaid.config import Config
 from pagermaid.listener import listener
 from pagermaid.utils import upload_attachment, lang, Message
@@ -43,7 +41,7 @@ def un_tar_gz(filename, dirs):
 
 @listener(is_plugin=False, outgoing=True, command="backup",
           description=lang('back_des'))
-async def backup(_: Client, message: Message):
+async def backup(message: Message):
     await message.edit(lang('backup_process'))
 
     # Remove old backup
@@ -67,7 +65,7 @@ async def backup(_: Client, message: Message):
 @listener(is_plugin=False, outgoing=True, command="recovery",
           need_admin=True,
           description=lang('recovery_des'))
-async def recovery(_: Client, message: Message):
+async def recovery(message: Message):
     reply = message.reply_to_message
 
     if not reply.document:

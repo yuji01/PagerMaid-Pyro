@@ -1,5 +1,3 @@
-from pyrogram import Client
-
 from pagermaid.single_utils import sqlite
 from pagermaid.listener import listener
 from pagermaid.group_manager import add_permission_for_group, Permission, remove_permission_for_group, \
@@ -16,11 +14,11 @@ def from_msg_get_sudo_id(message: Message) -> int:
         return message.chat.id
 
 
-@listener(is_plugin=False, outgoing=True, command="sudo",
+@listener(is_plugin=False, command="sudo",
           need_admin=True,
           parameters="{on|off|add|remove|gaddp|gaddu|gdelp|gdelu|glist|uaddp|udelp|list}",
           description=lang('sudo_des'))
-async def sudo_change(client: Client, message: Message):
+async def sudo_change(message: Message):
     """ To enable or disable sudo of your userbot. """
     input_str = message.arguments
     sudo = get_sudo_list()
@@ -78,14 +76,14 @@ async def sudo_change(client: Client, message: Message):
         for i in sudo:
             try:
                 if i > 0:
-                    user = await client.get_users(i)
+                    user = await message.bot.get_users(i)
                     text += f"• {user.mention()} - {' '.join(permissions.get_roles_for_user(str(i)))}\n"
                 else:
-                    chat = await client.get_chat(i)
+                    chat = await message.bot.get_chat(i)
                     text += f"• {chat.title} - {' '.join(permissions.get_roles_for_user(str(i)))}\n"
                 for j in permissions.get_permissions_for_user(str(i)):
                     text += f"    • {'-' if j[2] == 'ejection' else ''}{j[1]}\n"
-            except:
+            except Exception:
                 text += f"• `{i}` - {' '.join(permissions.get_roles_for_user(str(i)))}\n"
         await message.edit(text)
     elif len(message.parameter) > 0:

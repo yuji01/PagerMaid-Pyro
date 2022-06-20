@@ -1,8 +1,7 @@
 import contextlib
 from coloredlogs import ColoredFormatter
-from datetime import timezone
+from datetime import datetime, timezone
 from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig, DEBUG
-from datetime import datetime
 from os import getcwd
 
 from pagermaid.config import Config
@@ -55,6 +54,7 @@ bot = Client("pagermaid",
              api_hash=Config.API_HASH,
              ipv6=Config.IPV6,
              proxy=Config.PROXY)
+bot.job = scheduler
 
 
 async def log(message):
