@@ -139,13 +139,13 @@ async def plugin(message: Message):
         if len(message.parameter) == 2:
             if exists(f"{plugin_directory}{message.parameter[1]}.py") or \
                     exists(f"{plugin_directory}{message.parameter[1]}.py.disabled"):
-                safe_remove(f"{plugin_directory}{message.parameter[1]}.py")
-                safe_remove(f"{plugin_directory}{message.parameter[1]}.py.disabled")
-                with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
-                    version_json = json.load(f)
-                version_json[message.parameter[1]] = "0.0"
-                with open(f"{plugin_directory}version.json", 'w') as f:
-                    json.dump(version_json, f)
+                remove_plugin(message.parameter[1])
+                if exists(f"{plugin_directory}version.json"):
+                    with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
+                        version_json = json.load(f)
+                    version_json[message.parameter[1]] = "0.0"
+                    with open(f"{plugin_directory}version.json", 'w') as f:
+                        json.dump(version_json, f)
                 await message.edit(f"{lang('apt_remove_success')} {message.parameter[1]}, "
                                    f"{lang('apt_reboot')} ")
                 await log(f"{lang('apt_remove')} {message.parameter[1]}.")
