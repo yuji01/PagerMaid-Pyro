@@ -138,12 +138,14 @@ def listener(**args):
                 logs.warning(
                     "Please Don't Send Commands In The Same Conversation.."
                 )
-                await message.edit(lang("conversation_already_in_error"))
+                with contextlib.suppress(BaseException):
+                    await message.edit(lang("conversation_already_in_error"))
             except TimeoutConversationError:
                 logs.warning(
                     "Conversation Timed out while processing commands.."
                 )
-                await message.edit(lang("conversation_timed_out_error"))
+                with contextlib.suppress(BaseException):
+                    await message.edit(lang("conversation_timed_out_error"))
             except UserNotParticipant:
                 pass
             except ContinuePropagation as e:
@@ -215,12 +217,14 @@ def raw_listener(filter_s):
                 logs.warning(
                     "Please Don't Send Commands In The Same Conversation.."
                 )
-                await message.edit(lang("conversation_already_in_error"))
+                with contextlib.suppress(BaseException):
+                    await message.edit(lang("conversation_already_in_error"))
             except TimeoutConversationError:
                 logs.warning(
                     "Conversation Timed out while processing commands.."
                 )
-                await message.edit(lang("conversation_timed_out_error"))
+                with contextlib.suppress(BaseException):
+                    await message.edit(lang("conversation_timed_out_error"))
             except SystemExit:
                 await process_exit(start=False, _client=client, message=message)
                 await Hook.shutdown()

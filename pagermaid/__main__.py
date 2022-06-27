@@ -29,11 +29,10 @@ async def main():
             logs.info(f"{lang('module')} {plugin_name} {lang('error')}: {exception}")
             plugin_list.remove(plugin_name)
 
+    await process_exit(start=True, _client=bot)
+    logs.info(lang('start'))
     await Hook.startup()
 
-    await process_exit(start=True, _client=bot)
-
-    logs.info(lang('start'))
     await idle()
     await bot.stop()
 
