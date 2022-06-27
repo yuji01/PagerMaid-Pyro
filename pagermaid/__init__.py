@@ -1,4 +1,7 @@
 import contextlib
+import casbin
+from typing import Callable, Awaitable, Set
+
 from coloredlogs import ColoredFormatter
 from datetime import datetime, timezone
 from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig, DEBUG
@@ -19,6 +22,8 @@ working_dir = getcwd()
 # solve same process
 read_context = {}
 help_messages = {}
+startup_functions: Set[Callable[[], Awaitable[None]]] = set()
+shutdown_functions: Set[Callable[[], Awaitable[None]]] = set()
 all_permissions = []
 
 logs = getLogger(__name__)

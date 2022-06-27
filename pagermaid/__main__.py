@@ -5,6 +5,7 @@ from importlib import import_module
 from pyrogram import idle
 
 from pagermaid import bot, logs, working_dir
+from pagermaid.hook import Hook
 from pagermaid.modules import module_list, plugin_list
 from pagermaid.utils import lang, process_exit
 
@@ -27,6 +28,8 @@ async def main():
         except BaseException as exception:
             logs.info(f"{lang('module')} {plugin_name} {lang('error')}: {exception}")
             plugin_list.remove(plugin_name)
+
+    await Hook.startup()
 
     await process_exit(start=True, _client=bot)
 
