@@ -126,9 +126,9 @@ async def ping_dc(message: Message):
                 data.append("0")
         else:
             result = await execute(f"ping -c 1 {DCs[dc]} | awk -F '/' " + "'END {print $5}'")
-            if result.isdigit():
-                data.append(result)
-            else:
+            try:
+                data.append(str(float(result)))
+            except ValueError:
                 data.append("0")
     await message.edit(
         f"{lang('pingdc_1')}: `{data[0]}ms`\n"
