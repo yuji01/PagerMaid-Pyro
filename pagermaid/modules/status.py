@@ -85,7 +85,7 @@ async def status(message: Message):
 @listener(is_plugin=False, command="stats",
           description=lang("stats_des"))
 async def stats(message: Message):
-    await message.edit(lang("stats_loading"))
+    msg = await message.edit(lang("stats_loading"))
     a, u, g, s, c, b = 0, 0, 0, 0, 0, 0
     async for dialog in message.bot.get_dialogs():
         chat_type = dialog.chat.type
@@ -108,7 +108,7 @@ async def stats(message: Message):
             f"{lang('stats_channel')}: `{c}` \n"
             f"{lang('stats_bot')}: `{b}`"
             )
-    await message.edit(text)
+    await msg.edit(text)
 
 
 @listener(is_plugin=False, command="pingdc",
