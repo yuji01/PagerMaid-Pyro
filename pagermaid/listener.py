@@ -46,6 +46,14 @@ def listener(**args):
     priority = args.get("priority", 50)
     block_process = args.get("block_process", False)
 
+    if priority < 0 or priority > 100:
+        raise ValueError("Priority must be between 0 and 100.")
+    elif priority == 0 and is_plugin:
+        """ Priority 0 is reserved for modules. """
+        priority = 1
+    elif (not is_plugin) and need_admin:
+        priority = 0
+
     if command is not None:
         if command in help_messages:
             if help_messages[alias_command(command)]["priority"] <= priority:
