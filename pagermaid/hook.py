@@ -1,5 +1,7 @@
 import asyncio
 
+from pyrogram import StopPropagation
+
 from pagermaid import hook_functions, logs
 from pagermaid.single_utils import Message
 
@@ -70,6 +72,8 @@ class Hook:
         if cors := [pre(message) for pre in hook_functions["command_pre"]]:  # noqa
             try:
                 await asyncio.gather(*cors)
+            except StopPropagation as e:
+                raise StopPropagation from e
             except Exception as exception:
                 logs.info(f"[command_pre]: {type(exception)}: {exception}")
 
@@ -78,5 +82,7 @@ class Hook:
         if cors := [post(message) for post in hook_functions["command_post"]]:  # noqa
             try:
                 await asyncio.gather(*cors)
+            except StopPropagation as e:
+                raise StopPropagation from e
             except Exception as exception:
                 logs.info(f"[command_post]: {type(exception)}: {exception}")
