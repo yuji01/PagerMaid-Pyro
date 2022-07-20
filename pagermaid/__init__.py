@@ -14,7 +14,7 @@ import pyromod.listen
 from pyrogram import Client
 import sys
 
-pgm_version = "1.2.1"
+pgm_version = "1.2.2"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -33,7 +33,7 @@ root_logger = getLogger()
 root_logger.setLevel(DEBUG if Config.DEBUG else CRITICAL)
 root_logger.addHandler(logging_handler)
 pyro_logger = getLogger("pyrogram")
-pyro_logger.setLevel(DEBUG if Config.DEBUG else CRITICAL)
+pyro_logger.setLevel(CRITICAL)
 pyro_logger.addHandler(logging_handler)
 basicConfig(level=DEBUG if Config.DEBUG else INFO)
 logs.setLevel(DEBUG if Config.DEBUG else INFO)
