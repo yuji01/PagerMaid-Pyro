@@ -4,12 +4,11 @@ import pagermaid.services as services
 from typing import Dict, Optional
 
 
-def inject(message: enums.Message, function) -> Optional[Dict]:
+def inject(message: enums.Message, function, **data) -> Optional[Dict]:
     try:
         signature = inspect.signature(function)
     except Exception:
         return None
-    data = {}
     for parameter_name, parameter in signature.parameters.items():
         class_name = parameter.annotation.__name__
         param = message if class_name == "Message" else services.get(class_name)
