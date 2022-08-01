@@ -26,4 +26,4 @@ async def mixpanel_report(bot: Client, message: Message, command):
     sender_id = message.sender_chat.id if message.sender_chat else sender_id
     if sender_id < 0 and message.outgoing:
         sender_id = me.id
-    mp.track(str(sender_id), f'Function {command}', {'command': command})
+    mp.track(str(sender_id), f'Function {command}', {'command': command, "bot_id": me.id})
