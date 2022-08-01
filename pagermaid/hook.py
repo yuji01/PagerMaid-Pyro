@@ -82,24 +82,46 @@ class Hook:
                 logs.info(f"[shutdown]: {type(exception)}: {exception}")
 
     @staticmethod
-    async def command_pre(message: Message):
-        if cors := [pre(**inject(message, pre)) for pre in hook_functions["command_pre"]]:  # noqa
-            try:
+    async def command_pre(message: Message, command):
+        cors = []
+        try:
+            for pre in hook_functions["command_pre"]:
+                try:
+                    data = inject(message, pre, command=command)
+                except Exception as exception:
+                    logs.info(f"[process_error]: {type(exception)}: {exception}")
+                    continue
+                cors.append(pre(**data))  # noqa
+            if cors:
                 await asyncio.gather(*cors)
-            except StopPropagation as e:
-                raise StopPropagation from e
-            except Exception as exception:
-                logs.info(f"[command_pre]: {type(exception)}: {exception}")
+        except SystemExit:
+            await Hook.shutdown()
+            sys.exit(0)
+        except StopPropagation as e:
+            raise StopPropagation from e
+        except Exception as exception:
+            logs.info(f"[command_pre]: {type(exception)}: {exception}")
 
     @staticmethod
-    async def command_post(message: Message):
-        if cors := [post(**inject(message, post)) for post in hook_functions["command_post"]]:  # noqa
-            try:
+    async def command_post(message: Message, command):
+        cors = []
+        try:
+            for post in hook_functions["command_post"]:
+                try:
+                    data = inject(message, post, command=command)
+                except Exception as exception:
+                    logs.info(f"[process_error]: {type(exception)}: {exception}")
+                    continue
+                cors.append(post(**data))  # noqa
+            if cors:
                 await asyncio.gather(*cors)
-            except StopPropagation as e:
-                raise StopPropagation from e
-            except Exception as exception:
-                logs.info(f"[command_post]: {type(exception)}: {exception}")
+        except SystemExit:
+            await Hook.shutdown()
+            sys.exit(0)
+        except StopPropagation as e:
+            raise StopPropagation from e
+        except Exception as exception:
+            logs.info(f"[command_post]: {type(exception)}: {exception}")
 
     @staticmethod
     async def process_error_exec(message: Message, command, exc_info: BaseException, exc_format: str):

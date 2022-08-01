@@ -40,7 +40,10 @@ sentry_sdk.init(
 @Hook.on_startup()
 async def sentry_init_id(bot: Client):
     me = await bot.get_me()
-    sentry_sdk.set_user({"id": me.id, "ip_address": "{{auto}}"})
+    if me.username:
+        sentry_sdk.set_user({"id": me.id, "name": me.first_name, "username": me.username, "ip_address": "{{auto}}"})
+    else:
+        sentry_sdk.set_user({"id": me.id, "name": me.first_name, "ip_address": "{{auto}}"})
 
 
 @Hook.process_error()

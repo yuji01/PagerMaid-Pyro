@@ -140,7 +140,7 @@ def listener(**args):
                     read_context[(message.chat.id, message.id)] = True
 
                 if command:
-                    await Hook.command_pre(message)
+                    await Hook.command_pre(message, command)
                 if data := inject(message, function):
                     await function(**data)
                 else:
@@ -151,7 +151,7 @@ def listener(**args):
                     elif function.__code__.co_argcount == 2:
                         await function(client, message)
                 if command:
-                    await Hook.command_post(message)
+                    await Hook.command_post(message, command)
             except StopPropagation as e:
                 raise StopPropagation from e
             except KeyboardInterrupt as e:
