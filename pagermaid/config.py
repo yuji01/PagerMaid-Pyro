@@ -44,6 +44,7 @@ class Config:
         LOG_ID = int(os.environ.get("PGM_LOG_ID", config["log_chatid"]))
         IPV6 = strtobool(os.environ.get("PGM_IPV6", config["ipv6"]))
         ALLOW_ANALYTIC = strtobool(os.environ.get("PGM_ALLOW_ANALYTIC", config["allow_analytic"]), True)
+        SENTRY_API = "https://0785960e63e04279a694d0486d47d9ea@o1342815.ingest.sentry.io/6617119"
         TIME_FORM = os.environ.get("PGM_TIME_FORM", config["time_form"])
         DATE_FORM = os.environ.get("PGM_DATE_FORM", config["date_form"])
         START_FORM = os.environ.get("PGM_START_FORM", config["start_form"])
