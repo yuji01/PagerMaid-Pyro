@@ -6,6 +6,7 @@ from time import strftime, gmtime, time
 from traceback import format_exc
 
 from pyrogram import ContinuePropagation, StopPropagation, filters, Client
+from pyrogram.errors import Flood, Forbidden
 from pyrogram.errors.exceptions.bad_request_400 import (
     MessageIdInvalid,
     MessageNotModified,
@@ -155,7 +156,7 @@ def listener(**args):
                 raise StopPropagation from e
             except KeyboardInterrupt as e:
                 raise KeyboardInterrupt from e
-            except MessageNotModified:
+            except (UserNotParticipant, MessageNotModified, MessageEmpty, Flood, Forbidden):
                 pass
             except MessageIdInvalid:
                 logs.warning(
@@ -179,8 +180,6 @@ def listener(**args):
                 )
                 with contextlib.suppress(BaseException):
                     await message.edit(lang("reload_des"))
-            except UserNotParticipant:
-                pass
             except ContinuePropagation as e:
                 if block_process:
                     raise StopPropagation from e
@@ -274,9 +273,7 @@ def raw_listener(filter_s):
                 await process_exit(start=False, _client=client, message=message)
                 await Hook.shutdown()
                 sys.exit(0)
-            except UserNotParticipant:
-                pass
-            except MessageEmpty:
+            except (UserNotParticipant, MessageNotModified, MessageEmpty, Flood, Forbidden):
                 pass
             except BaseException:
                 exc_info = sys.exc_info()[1]
