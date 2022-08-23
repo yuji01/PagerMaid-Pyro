@@ -278,7 +278,8 @@ class Message(pyrogram.types.Message):
                     msg = await self.reply(
                         text=text,
                         parse_mode=parse_mode,
-                        disable_web_page_preview=disable_web_page_preview
+                        disable_web_page_preview=disable_web_page_preview,
+                        quote=True
                     )
             else:
                 try:
@@ -298,7 +299,8 @@ class Message(pyrogram.types.Message):
                             parse_mode=parse_mode,
                             entities=entities,
                             disable_web_page_preview=disable_web_page_preview,
-                            reply_markup=reply_markup
+                            reply_markup=reply_markup,
+                            quote=True
                         )
         else:
             with open("output.log", "w+") as file:
