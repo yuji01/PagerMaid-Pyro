@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with pyromod.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-
 import asyncio
 import contextlib
 import functools
@@ -247,8 +246,11 @@ class Message(pyrogram.types.Message):
         msg = None
         sudo_users = get_sudo_list()
         reply_to = self.reply_to_message
-        from_id = self.from_user.id if self.from_user else self.sender_chat.id
+        from_id = self.chat.id
+        if self.from_user or self.sender_chat:
+            from_id = self.from_user.id if self.from_user else self.sender_chat.id
         is_self = self.from_user.is_self if self.from_user else False
+        is_self = (await self._client.get_me()).id == from_id or is_self
 
         if len(text) < 4096:
             if from_id in sudo_users or self.chat.id in sudo_users:
@@ -256,7 +258,8 @@ class Message(pyrogram.types.Message):
                     msg = await reply_to.reply(
                         text=text,
                         parse_mode=parse_mode,
-                        disable_web_page_preview=disable_web_page_preview
+                        disable_web_page_preview=disable_web_page_preview,
+                        quote=True
                     )
                 elif is_self:
                     msg = await self._client.edit_message_text(
