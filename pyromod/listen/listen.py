@@ -24,6 +24,7 @@ import functools
 from typing import Optional, List, Union
 
 import pyrogram
+from pyrogram.enums import ChatType
 
 from pagermaid.single_utils import get_sudo_list, Message
 from pagermaid.scheduler import add_delete_message_job
@@ -247,10 +248,12 @@ class Message(pyrogram.types.Message):
         sudo_users = get_sudo_list()
         reply_to = self.reply_to_message
         from_id = self.chat.id
+        is_self = False
         if self.from_user or self.sender_chat:
             from_id = self.from_user.id if self.from_user else self.sender_chat.id
-        is_self = self.from_user.is_self if self.from_user else False
-        is_self = ((await self._client.get_me()).id != from_id and from_id > 0) or is_self
+        elif self.chat.type == ChatType.PRIVATE:
+            is_self = True
+        is_self = self.from_user.is_self if self.from_user else is_self
 
         if len(text) < 4096:
             if from_id in sudo_users or self.chat.id in sudo_users:
