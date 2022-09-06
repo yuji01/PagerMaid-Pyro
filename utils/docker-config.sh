@@ -65,8 +65,10 @@ main () {
         login
     else
         if [ ! -f "/pagermaid/workdir/pagermaid.session" ]; then
-            login
+            welcome
+            configure
         fi
+        login
     fi
 }
 
