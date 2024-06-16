@@ -3,9 +3,12 @@ name: "Docker Build"
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
-  workflow_dispatch: ~
-  push:
-    branches: [ master ]
+#  workflow_dispatch: ~
+#  push:
+#    branches: [ master ]
+
+  watch: # 3.手动点击收藏
+    types: [started]
 
 jobs:
   build:
