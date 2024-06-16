@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:22.04
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     LANG=zh_CN.UTF-8 \
     SHELL=/bin/bash \
@@ -78,6 +78,8 @@ RUN source ~/.bashrc \
     && git config --global pull.ff only \
     ## pip install
     && pip install -r requirements.txt \
+## 修复google和其他
+    && pip install cchardet magic_google jieba pinyin bs4 emoji speedtest-cli \
     ## 卸载编译依赖，清理安装缓存
     && sudo apt-get purge --auto-remove -y \
         build-essential \
